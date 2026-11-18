@@ -1,0 +1,17 @@
+## Onde fica o material
+- As memorias (arquivo .md) do projeto ficam dentro do diretório `Vault` do projeto.
+- Neste arquivo, as palavras "memoria" e "nota" significam a mesma coisa: um arquivo `.md` com informações do projeto, que fica dentro do diretório `Vault` do projeto e é lido e gravado diretamente no disco.
+- O escopo técnico fica em `Vault/Escopo tecnico`, uma arquivo por assunto, ligadas entre si através do marcador`[[ ]]`.
+- A documentação de utilização fica em `Vault/Documentação`, uma memoria (arquivo .md) por assunto, ligadas entre si.
+- Todas as pendências, faltou ser decidido ou faltou ser executado ficam em `Vault/Pendências`.
+
+## Índice do projeto (seguir sempre)
+- O arquivo `Vault/Indice.md` resume do que se trata o projeto e lista todas as notas, uma linha por nota, com o link `[[ ]]` e o que ela contém.
+- Ler: antes de procurar qualquer informação no Vault, leio primeiro a memoria `Indice` e abro somente as notas indicadas por ela. Nunca leio todas as notas ou notas sem relacionamento.
+- Atualizar: toda vez que eu criar, mover, renomear ou mudar o assunto de uma memoria em `Vault`, atualizo a linha dele na nota `Indice` no mesmo passo.
+
+## O que é cada pasta (seguir sempre)
+- `Vault/Escopo tecnico`: SOMENTE texto explicando decisões já tomadas, cada uma com o link `[[ ]]` da pergunta onde foi decidida.
+- `Vault/Escopo tecnico/Perguntas e respostas`: perguntas abertas, com alternativas, prós e contras, pesquisa e fontes.
+- `Vault/Escopo tecnico/Perguntas e respostas/Histórico`: perguntas já respondidas e compreendidas, com todo o material que as acompanhou.
+- `Vault/Pendências`: tudo que ficar sem ter sido feito ou que irá ser feito, todas decisões postergadas, todas alterações feitas em qualquer parte do projeto que gere alterações consequentes e não foram realizadas.

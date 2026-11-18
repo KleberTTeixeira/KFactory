@@ -1,0 +1,12 @@
+{
+  "name": "kfactory",
+  "owner": { "name": "kleber" },
+  "description": "Marketplace do KFactory: kit reutilizável de desenvolvimento",
+  "plugins": [
+    {
+      "name": "kfactory",
+      "source": "./plugins/kfactory",
+      "description": "Kit reutilizável de desenvolvimento"
+    }
+  ]
+}
