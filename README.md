@@ -1,6 +1,10 @@
 # KFactory
 
-Kit reutilizável de desenvolvimento para o Claude Code: regras de segurança, proteção dos arquivos `CLAUDE.md`, auditoria das ações, avisos na área de trabalho, revisão de commits e gravação de commits.
+![Licença CC BY-NC-SA 4.0](https://img.shields.io/badge/licen%C3%A7a-CC%20BY--NC--SA%204.0-lightgrey)
+
+Kit reutilizável de desenvolvimento para o uso do Claude Code no Kobisidian: regras de segurança, proteção dos arquivos `CLAUDE.md`, auditoria das ações, avisos na área de trabalho, revisão de commits e gravação de commits.
+
+---
 
 ## Requisitos
 
@@ -15,7 +19,7 @@ Kit reutilizável de desenvolvimento para o Claude Code: regras de segurança, p
 No Claude Code, adicione o marketplace e instale o plugin:
 
 ```
-/plugin marketplace add <pasta do KFactory ou endereço do repositório>
+/plugin marketplace add https://github.com/KleberTTeixeira/KFactory
 /plugin install kfactory@kfactory
 ```
 
@@ -69,4 +73,5 @@ Os hooks do plugin conferem cada ação do agente:
 
 ## Licença
 
-Este projeto está licenciado sob a [Creative Commons Atribuição-NãoComercial-CompartilhaIgual 4.0 Internacional (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/). Veja o arquivo [LICENSE](LICENSE).
+Este projeto está licenciado sob a [Creative Commons Atribuição-NãoComercial-CompartilhaIgual 4.0 Internacional (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/). 
+Veja o arquivo [LICENSE](LICENSE).

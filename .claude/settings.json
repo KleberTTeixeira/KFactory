@@ -1,5 +1,5 @@
 {
   "enabledPlugins": {
-    "kfactory@kfactory": false
+    "kfactory@kfactory": true
   }
 }
