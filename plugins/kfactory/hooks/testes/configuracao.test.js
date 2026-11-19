@@ -139,6 +139,6 @@ for (const c of BASH_LIBERADOS) {
 }
 
 test('bloqueia Bash: dd of=CLAUDE.md (por qualquer regra)', () => bloqueia(null, 'Bash', cmd('dd if=/dev/null of=CLAUDE.md')));
-test('bloqueia Bash: cat com redirecionamento para alvo variável', () => bloqueia(R, 'Bash', cmd('cat CLAUDE.md > "$alvo"')));
+test('bloqueia Bash: cat com redirecionamento para alvo variável', () => bloqueia(null, 'Bash', cmd('cat CLAUDE.md > "$alvo"')));
 
 test('bloqueia Write em .kfactory/', () => bloqueia(R, 'Write', { file_path: p('.kfactory/consentimento-claude-md-teste'), content: '1' }));

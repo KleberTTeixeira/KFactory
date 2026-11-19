@@ -24,7 +24,7 @@ function protegido(valor, ctx) {
   const partes = rel.split(path.sep).filter(Boolean);
   const base = partes.length ? partes[partes.length - 1] : '';
   if (base.toLowerCase() === 'claude.md') return true;
-  return partes.some((p) => p === '.claude' || p === 'hooks' || p === '.claude-plugin' || p === '.kfactory');
+  return partes.some((p) => p === '.claude' || p === 'hooks' || p === '.claude-plugin' || p === '.kfactory' || p === '.git');
 }
 
 function semOpcoes(args) {

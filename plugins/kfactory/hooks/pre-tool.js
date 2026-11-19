@@ -11,6 +11,7 @@ const REGRAS = [
   require('./regras/configuracao'),
   require('./regras/pacotes'),
   require('./regras/commit'),
+  require('./regras/efeito-externo'),
 ];
 
 function responder(decisao, motivo) {

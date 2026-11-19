@@ -1,6 +1,6 @@
 ---
 name: init
-description: Grava no CLAUDE.md do projeto, depois do conteúdo do primeiro título de nível 1 (antes do primeiro subtítulo de nível 2, ou no final se não houver), o conteúdo do arquivo ContenteClaudeMd do plugin, entre marcadores, preservando o resto do arquivo; cria a pasta Vault e o arquivo Vault/Indice.md se não existirem; e, com o StatusLineGenerate.sh, configura a status line e a variável CLAUDE_CODE_FORK_SUBAGENT=0 no ~/.claude/settings.json. Só pode ser chamada pelo usuário com /kfactory:init.
+description: Grava no CLAUDE.md do projeto, depois do conteúdo do primeiro título de nível 1 (antes do primeiro subtítulo de nível 2, ou no final se não houver), o conteúdo do arquivo ContenteClaudeMd do plugin, entre marcadores, preservando o resto do arquivo; cria a pasta Vault e o arquivo Vault/Indice.md se não existirem; e, com o StatusLineGenerate.sh, configura a variável CLAUDE_CODE_FORK_SUBAGENT=0 no ~/.claude/settings.json. Só pode ser chamada pelo usuário com /kfactory:init.
 disable-model-invocation: true
 ---
 
@@ -55,7 +55,7 @@ Siga os passos na ordem. Não pule nenhum. Não altere nada além do descrito.
    bash "${CLAUDE_PLUGIN_ROOT}/scripts/StatusLineGenerate.sh"
    ```
 
-   O script configura a status line e grava `"CLAUDE_CODE_FORK_SUBAGENT": "0"` no bloco `env` do `~/.claude/settings.json` (necessário para a skill `reviser`), preservando as outras chaves.
+   O script grava `"CLAUDE_CODE_FORK_SUBAGENT": "0"` no bloco `env` do `~/.claude/settings.json` (necessário para a skill `reviser`), preservando as outras chaves.
    Se falhar, informe o erro exatamente como saiu.
 
 9. Verificação final do `CLAUDE.md`. Leia de novo com a ferramenta Read o `CLAUDE.md` da raiz do projeto e confira, sem alterar nada:
@@ -68,4 +68,4 @@ Siga os passos na ordem. Não pule nenhum. Não altere nada além do descrito.
    - O arquivo é exatamente igual ao NOVO texto.
    Se algum item falhar, informe ao usuário qual falhou e o que foi encontrado. Não tente corrigir.
 
-10. Informe ao usuário, em poucas linhas: se o `CLAUDE.md` foi criado, atualizado ou já estava atualizado; se a pasta `Vault` e o arquivo `Vault/Indice.md` foram criados ou já existiam; o resultado da verificação final; o resultado do script da status line e da variável `CLAUDE_CODE_FORK_SUBAGENT`; e que a mudança no `~/.claude/settings.json` só vale depois de fechar e abrir o Claude Code.
+10. Informe ao usuário, em poucas linhas: se o `CLAUDE.md` foi criado, atualizado ou já estava atualizado; se a pasta `Vault` e o arquivo `Vault/Indice.md` foram criados ou já existiam; o resultado da verificação final; o resultado do script da variável `CLAUDE_CODE_FORK_SUBAGENT`; e que a mudança no `~/.claude/settings.json` só vale depois de fechar e abrir o Claude Code.

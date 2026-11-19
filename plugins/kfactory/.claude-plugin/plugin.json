@@ -1,7 +1,7 @@
 {
   "name": "kfactory",
   "description": "Kit reutilizável de desenvolvimento",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "author": { "name": "kleber" },
   "license": "CC-BY-NC-SA-4.0"
 }

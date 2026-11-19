@@ -237,6 +237,9 @@ function acharFechamento(s, inicio) {
   return s.length;
 }
 
+// Marca, dentro da palavra, o trecho que só é conhecido na execução ($(...), `...`, <(...)).
+const DINAMICO = '\u0001';
+
 function novoSegmento() {
   return { palavras: [], redirecionamentos: [], heredocs: [] };
 }
@@ -297,7 +300,7 @@ function analisarShell(texto, profundidade) {
     const k = acharFechamento(s, inicioInterno);
     const interno = s.slice(inicioInterno, k);
     extras.push(...segmentosDoComando(interno, profundidade + 1));
-    anexar(interno);
+    anexar(DINAMICO + interno);
     return k + 1;
   };
   const crase = (i) => {
@@ -308,7 +311,7 @@ function analisarShell(texto, profundidade) {
     }
     const interno = s.slice(i + 1, Math.min(k, s.length));
     extras.push(...segmentosDoComando(interno, profundidade + 1));
-    anexar(interno);
+    anexar(DINAMICO + interno);
     return k + 1;
   };
 
@@ -581,4 +584,5 @@ module.exports = {
   redirecionaEscrita,
   resumir,
   CARACTERES_GLOB,
+  DINAMICO,
 };

@@ -6,6 +6,19 @@
 const { lerEntradaPadrao } = require('./lib/comum');
 const { marcar, desmarcar, pedeRevisao } = require('./lib/revisao');
 const claudeMd = require('./lib/claude-md');
+const statusline = require('./lib/statusline');
+
+// Pedido do /kfactory:statusline: libera só o script de alternância, só enquanto o agente responde a esta mensagem.
+function pedidoStatusline(sessao, prompt) {
+  const projeto = process.env.CLAUDE_PROJECT_DIR;
+  if (!projeto) return;
+  try {
+    if (statusline.pedeStatusline(prompt)) statusline.registrarPedido(projeto, sessao);
+    else statusline.retirarPedido(projeto, sessao);
+  } catch {
+    // Sem pedido registrado, o script continua bloqueado.
+  }
+}
 
 // Consentimento para alterar CLAUDE.md: vale só enquanto o agente responde a esta mensagem.
 // Alterações feitas entre o fim da resposta anterior e esta mensagem são do usuário: viram a nova cópia.
@@ -35,6 +48,7 @@ function principal() {
   // Retorno de agente (subagente) não é mensagem do usuário: não marca nem desmarca.
   if (/^\s*<agent-message\b/.test(prompt)) return;
   consentimento(sessao, prompt);
+  pedidoStatusline(sessao, prompt);
   // Chamada direta da skill pelo comando: ela já está rodando, não há o que forçar.
   if (/^\s*\/(kfactory:)?reviser(\s|$)/i.test(prompt)) {
     desmarcar(sessao);

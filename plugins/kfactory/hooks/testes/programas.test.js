@@ -43,11 +43,11 @@ test('perl: bloqueia caminho externo em q{}', () => bloqueia(R, 'Bash', cmd("per
 test('perl: bloqueia caminho externo em qq()', () => bloqueia(R, 'Bash', cmd("perl -e 'print qq(~/.bashrc)'")));
 test('perl: bloqueia caminho externo em qq com delimitador |', () => bloqueia(R, 'Bash', cmd("perl -e 'open F, qq|../fora.txt|'")));
 
-test('perl: libera substituição comum', () => libera('Bash', cmd("perl -pe 's/a/b/' README.md")));
-test('perl: libera regex com barras', () => libera('Bash', cmd("perl -ne 'print if /^\\/api\\//' README.md")));
-test('perl: libera string comum', () => libera('Bash', cmd("perl -e 'print \"ok\\n\"'")));
-test('perl: libera q{} com caminho interno', () => libera('Bash', cmd("perl -e 'open F, q{<README.md}'")));
-test('perl: libera palavra que contém exec', () => libera('Bash', cmd("perl -e 'print \"execute\"'")));
+test('perl: bloqueia código na linha (-pe)', () => bloqueia(null, 'Bash', cmd("perl -pe 's/a/b/' README.md")));
+test('perl: bloqueia código na linha (-ne)', () => bloqueia(null, 'Bash', cmd("perl -ne 'print if /^\\/api\\//' README.md")));
+test('perl: bloqueia código na linha (-e)', () => bloqueia(null, 'Bash', cmd("perl -e 'print \"ok\\n\"'")));
+test('perl: bloqueia q{} mesmo com caminho interno', () => bloqueia(null, 'Bash', cmd("perl -e 'open F, q{<README.md}'")));
+test('perl: bloqueia código na linha com print', () => bloqueia(null, 'Bash', cmd("perl -e 'print \"execute\"'")));
 
 // grep, rg, jq continuam ignorando o primeiro argumento
 test('grep: libera padrão iniciado por /', () => libera('Bash', cmd("grep '/api/' README.md")));
