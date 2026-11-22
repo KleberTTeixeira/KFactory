@@ -248,6 +248,24 @@ function excecaoStatusline(entrada, ctx) {
 function avaliar(entrada, ctx) {
   if (excecaoInit(entrada, ctx)) return null;
   if (excecaoStatusline(entrada, ctx)) return null;
+
+  // Ferramentas MCP que gravam em disco escolhendo o destino internamente
+  // (ex.: save_to_disk do Chrome, que grava em /tmp). O caminho nao aparece
+  // no tool_input, entao nega-se qualquer gravacao desse tipo.
+  if (!['Bash', 'Read', 'Write', 'Edit', 'Glob', 'Grep'].includes(entrada.tool_name)) {
+    const ti = entrada.tool_input && typeof entrada.tool_input === 'object' ? entrada.tool_input : {};
+    const GRAVA_FLAG = /save[_-]?to[_-]?disk|save[_-]?to[_-]?file|write[_-]?to[_-]?disk|to[_-]?disk|download/i;
+    const GRAVA_NOME = /screenshot|save_file|\bexport\b|download|capture|gif_creator|upload_image|file_upload/i;
+    for (const [k, v] of Object.entries(ti)) {
+      if (GRAVA_FLAG.test(k) && v) {
+        return negar(`a ferramenta "${entrada.tool_name}" tenta gravar em disco (parametro "${k}") com destino nao verificavel; gravacao fora do projeto sem autorizacao nao e permitida.`);
+      }
+    }
+    if (GRAVA_NOME.test(entrada.tool_name)) {
+      return negar(`a ferramenta "${entrada.tool_name}" grava em disco com destino escolhido por ela mesma; gravacao fora do projeto sem autorizacao nao e permitida.`);
+    }
+  }
+
   for (const c of caminhosDaFerramenta(entrada)) {
     if (c.tipo === 'padrao') {
       if (!padraoExterno(c.valor)) continue;

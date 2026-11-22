@@ -7,7 +7,7 @@
 ![JSON](https://img.shields.io/badge/JSON-000000?logo=json&logoColor=white)
 ![Markdown](https://img.shields.io/badge/Markdown-000000?logo=markdown&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
-![IA](https://img.shields.io/badge/desenvolvido%20com-IA-8A2BE2)
+![IA](https://img.shields.io/badge/desenvolvido%20para-IA-8A2BE2)
 
 O **KFactory** é um plugin para o Claude Code que facilita e padroniza a criação de projetos dentro do [Kobsidian](https://kobsidian.com.br/).
 
@@ -91,26 +91,49 @@ No Claude Code, adicione o marketplace e instale o plugin:
 /plugin marketplace add https://github.com/KleberTTeixeira/KFactory
 /plugin install kfactory@kfactory
 ```
+## Atualização
 
-## Primeiro uso em cada projeto
+A atualização é feita em duas etapas, nesta ordem: primeiro o marketplace, depois o plugin. Ela pode ser feita dentro do Claude Code ou pelo terminal do sistema.
 
-Abra o Claude Code na pasta do projeto e rode:
+### Dentro do Claude Code
 
+Com o Claude Code aberto na pasta do projeto:
+
+1. Atualize o marketplace:
+
+   ```
+   /plugin marketplace update kfactory
+   ```
+
+2. Atualize o plugin: rode `/plugin`, vá até a aba **Installed** com a tecla **Tab**, selecione `kfactory`, pressione **Enter** e escolha **Update now**.
+3. Feche o painel. O Claude Code roda `/reload-plugins` e aplica a nova versão na sessão, sem precisar reiniciar.
+
+### Pelo terminal
+
+Na pasta raiz do projeto:
+
+#### Windows
+
+No PowerShell:
+
+```powershell
+cd C:\caminho\do\projeto
+claude plugin marketplace update kfactory
+claude plugin update kfactory@kfactory
 ```
-/kfactory:init
+
+#### macOS e Linux
+
+```bash
+cd ~/caminho/do/projeto
+claude plugin marketplace update kfactory && claude plugin update kfactory@kfactory
 ```
 
-O comando:
+A nova versão é carregada na próxima sessão. Se o Claude Code já estiver aberto, rode `/reload-plugins` na sessão para aplicá-la. Para conferir a versão instalada, rode `claude plugin list`.
 
-1. Grava no `CLAUDE.md` da raiz do projeto o bloco de instruções do kfactory, entre as linhas `<!-- kfactory:inicio -->` e `<!-- kfactory:fim -->`:
-   - se o arquivo tiver um título `#`, o bloco entra depois do conteúdo desse título, logo antes do primeiro subtítulo `##`; se não houver subtítulo `##`, entra no final do arquivo;
-   - se o arquivo não tiver título `#`, o bloco entra no início;
-   - se o arquivo não existir, é criado só com o bloco;
-   - rodar de novo substitui o bloco anterior, sem mexer no resto do arquivo.
-2. Cria a pasta `Vault` e o arquivo `Vault/Indice.md`, se não existirem.
-3. Configura no `~/.claude/settings.json` a variável `CLAUDE_CODE_FORK_SUBAGENT` com o valor `"0"`, no bloco `env`, para os agentes rodarem em primeiro plano (necessário para a revisão). Vale para todas as sessões e projetos do usuário.
+### Atualização automática
 
-Depois do comando, feche e abra o Claude Code para a mudança no `~/.claude/settings.json` valer.
+A atualização automática vem desligada para o marketplace `kfactory`. Para ligá-la, rode `/plugin`, vá até a aba **Marketplaces**, selecione `kfactory` e escolha **Enable auto-update**. Com ela ligada, o Claude Code atualiza o marketplace e o plugin ao iniciar a sessão e mostra o aviso `Plugin updated: kfactory · Run /reload-plugins to apply`. Rode `/reload-plugins` para usar a nova versão na mesma sessão.
 
 ## Comandos e skills
 
