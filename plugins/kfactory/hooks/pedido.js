@@ -8,6 +8,9 @@ const { marcar, desmarcar, pedeRevisao } = require('./lib/revisao');
 const claudeMd = require('./lib/claude-md');
 const statusline = require('./lib/statusline');
 
+// Lembrete injetado em toda mensagem do usuário.
+const LEMBRETE = 'Siga sempre as regras obrigatórias do CLAUDE.md do projeto.';
+
 // Pedido do /kfactory:statusline: libera só o script de alternância, só enquanto o agente responde a esta mensagem.
 function pedidoStatusline(sessao, prompt) {
   const projeto = process.env.CLAUDE_PROJECT_DIR;
@@ -54,17 +57,19 @@ function principal() {
     desmarcar(sessao);
     return;
   }
+  let contexto = LEMBRETE;
   if (pedeRevisao(prompt)) {
     marcar(sessao);
-    process.stdout.write(JSON.stringify({
-      hookSpecificOutput: {
-        hookEventName: 'UserPromptSubmit',
-        additionalContext: 'O usuário pediu uma revisão. Chame a skill "kfactory:reviser" com a ferramenta Skill antes de qualquer outra ação. Não faça a revisão por conta própria: as demais ferramentas ficam bloqueadas até a skill ser chamada.',
-      },
-    }));
+    contexto += '\nO usuário pediu uma revisão. Chame a skill "kfactory:reviser" com a ferramenta Skill antes de qualquer outra ação. Não faça a revisão por conta própria: as demais ferramentas ficam bloqueadas até a skill ser chamada.';
   } else {
     desmarcar(sessao);
   }
+  process.stdout.write(JSON.stringify({
+    hookSpecificOutput: {
+      hookEventName: 'UserPromptSubmit',
+      additionalContext: contexto,
+    },
+  }));
 }
 
 try {

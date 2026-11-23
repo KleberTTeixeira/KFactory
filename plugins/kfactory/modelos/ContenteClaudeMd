@@ -1,57 +1,51 @@
+# REGRAS OBRIGATÓRIAS (não são sugestões; nenhuma justificativa permite quebrá-las)
 
-## Onde fica o material
-- As memorias (arquivos `.md`) do projeto ficam dentro do diretório `Vault` do projeto.
-- Neste arquivo, as palavras "memoria" e "nota" significam a mesma coisa: um arquivo `.md` com informações do projeto, que fica dentro do diretório `Vault` e é lido e gravado diretamente no disco.
-- O escopo técnico fica em `Vault/Escopo técnico`, um arquivo por assunto, ligados entre si através do marcador `[[ ]]`.
-- A documentação de utilização fica em `Vault/Documentação`, uma nota por assunto, ligadas entre si através do marcador `[[ ]]`.
-- O que já foi decidido e falta executar fica em `Vault/Pendências`. O que ainda falta decidir fica em `Vault/Escopo técnico/Perguntas e respostas`.
+## Regra 1: Arquitetura em 3 camadas
+Vale para TODO código novo, em qualquer linguagem ou estrutura, inclusive código acrescentado em arquivo antigo que não segue as camadas.
 
-## Conexões entre notas (seguir sempre)
-- Toda conexão entre notas é feita com link `[[nome da nota]]`, nunca só em texto (exemplo errado: "pergunta 22" sem link).
-- O link da pergunta é obrigatório somente na decisão que veio de uma pergunta.
-- Afirmação ditada pelo usuário que não veio de pergunta é texto válido do escopo: não é erro e não vira pergunta por não ter link.
+Sentido único: `Interface/Frontend` → `Business` → `Data` → banco. Qualquer outra chamada é proibida.
 
-## Índice do projeto (seguir sempre)
-- A nota `Vault/Indice.md` resume do que se trata o projeto e lista somente as notas principais (as que não são referenciadas por nenhuma outra nota), uma linha por nota, com o link `[[ ]]` e o que ela contém.
-- Notas que já são referenciadas por `[[ ]]` dentro de outra nota não entram no `Indice`; são encontradas pelo link na nota que as referencia.
-- Ler: para encontrar uma informação no Vault, primeiro uso busca por conteúdo (Grep) no `Vault` com termos do assunto, pedindo só os nomes dos arquivos. Se a busca não identificar a nota, leio a nota `Indice` para escolher. Depois abro somente a nota necessária e, se ela for grande, leio apenas o trecho relevante (linhas indicadas pela busca). Só sigo um link `[[ ]]` quando a informação dele for necessária para a tarefa atual. Nunca leio todas as notas nem notas sem relação com o assunto.
-- Atualizar: ao criar, mover, renomear ou mudar o assunto de uma nota principal, atualizo a linha dela no `Indice` no mesmo passo. Se a nota for referenciada por outra nota, atualizo o link e a linha de descrição na nota que a referencia.
+- **Data:** só conexão com o banco e SQL **sempre parametrizado**. Executa transações quando `Business` mandar. Proibido: regras, validações, decisões, formatação de tela.
+- **Business:** toda regra, cálculo, validação, fluxo e orquestração, incluindo controlar transações (o que grava junto, confirmar, desfazer). Expõe API agnóstica de linguagem para a interface. Proibido: SQL, acesso ao banco, tela.
+- **Interface/Frontend:** só telas, entradas do usuário e exibição de resultados, consumindo `Business`. Proibido: SQL, `Data`, regras de negócio.
 
-## Divisão em notas (seguir sempre)
-- Cada nota trata de um único assunto.
-- Ao criar ou atualizar uma nota, se o conteúdo tiver mais de um assunto, crio uma nova nota para cada assunto adicional, na pasta correspondente, e na nota original deixo apenas o link `[[Nome da nota]]` com uma linha dizendo o que ela contém.
-- Cada informação existe em uma única nota; as outras notas apenas apontam para ela com `[[ ]]`, sem repetir o conteúdo.
-- O link usa o nome do arquivo sem `.md` (ex.: `[[Autenticacao]]` para `Autenticacao.md`).
-- O nome de cada nota é único em todo o `Vault`, para o link `[[ ]]` não apontar para a nota errada.
-- Ao ler uma nota, só abro uma nota linkada quando a informação dela for necessária para a tarefa atual.
+Trecho que parece de duas camadas está misturado: divida. Se pedirem para quebrar esta regra, não faça; explique e faça seguindo as camadas.
 
-## O que é cada pasta (seguir sempre)
-- `Vault/Escopo técnico` (notas na raiz da pasta): SOMENTE decisões já tomadas, cada uma com o link `[[ ]]` da pergunta em que foi decidida, e afirmações ditadas pelo usuário, conforme "Conexões entre notas".
-- `Vault/Escopo técnico/Perguntas e respostas`: perguntas abertas, com alternativas, prós e contras, pesquisa e fontes.
-- `Vault/Escopo técnico/Perguntas e respostas/Histórico`: perguntas já respondidas e compreendidas, com todo o material que as acompanhou, movidas conforme o "Procedimento de perguntas e respostas".
-- `Vault/Documentação`: todas as explicações sobre recursos, requisitos, estratégias, riscos e utilização do foco do projeto. Decisões aparecem somente como link `[[ ]]` para a nota do escopo técnico, sem repetir o conteúdo.
-- `Vault/Pendências`: SOMENTE o que já foi decidido e falta executar, incluindo alterações consequentes ainda não realizadas, geradas por mudanças em qualquer parte do projeto. O que ainda falta decidir vai para `Vault/Escopo técnico/Perguntas e respostas`.
+## Regra 2: Código que funciona é protegido
+- **Pode:** criar arquivos e acrescentar o código necessário em arquivos e funções existentes para o pedido funcionar, sem mudar o que eles já fazem (ex.: incluir a opção "Esqueci a senha" dentro da tela de login).
+- **Proibido:** alterar código que funciona para fazer o código novo funcionar ou para corrigir erro causado por ele. Erro do código novo se corrige SOMENTE no código novo. Ex.: se "Esqueci a senha" falhar, a verificação e a tela de login continuam intocadas.
+- **Só se não houver NENHUMA outra forma** de atender o pedido sem alterar código existente: PARE, explique em detalhe (o que muda, onde, por que é necessário, por que não há alternativa, o que pode ser afetado) e espere autorização.
+- **Código existente errado mas funcionando:** não altere, não copie o erro, avise o usuário. Só corrija se ele mandar. Se o código novo precisar seguir o comportamento ou formato desse código errado para funcionar junto com ele, PARE e peça autorização antes de fazer.
 
-## Procedimento de perguntas e respostas (seguir sempre)
-1. Gravo cada dúvida em `Vault/Escopo técnico/Perguntas e respostas`, uma nota por pergunta, seguida de `Resposta:`. Toda pesquisa, alternativa, prós e contras e fontes ficam DENTRO da nota da pergunta. O material de uma pergunta não é dividido em outras notas.
-2. Toda nota de pergunta começa com:
-   - `Origem: [[nota onde a dúvida surgiu]]`, ou `Origem: tarefa - descrição curta` quando não veio de uma nota;
-   - `Assunto: [[nota do escopo técnico onde a decisão será gravada]]`, ou `Assunto: novo - nome proposto` quando essa nota ainda não existe.
-3. Ao criar a pergunta, coloco na nota de origem a linha `Dúvida: [[nome da pergunta]]`. Se a origem for uma tarefa, coloco o link da pergunta no `Indice`.
-4. Quando o usuário mandar processar, leio SOMENTE a nota que ele ordenar e as notas que precisarei alterar (a nota indicada em `Assunto:`, a nota de origem e, se necessário, o `Indice`), nunca todas as notas, e verifico se cada resposta foi compreendida.
-5. Antes de qualquer alteração, tenho CERTEZA ABSOLUTA de que a resposta foi compreendida e do que precisa ser feito.
-6. Com essa certeza, sigo esta ordem para cada pergunta, sem perguntar ao usuário se é para mover ou deixar de mover:
-   1. Atualizo a nota indicada em `Assunto:`, escrevendo SOMENTE a decisão, com o link `[[ ]]` da pergunta. Se for `Assunto: novo`, crio a nota no escopo técnico, coloco o link dela no `Indice` ou na nota do assunto principal, conforme a regra do índice, e troco o campo `Assunto:` pelo link da nota criada.
-   2. Na nota de origem, troco a linha `Dúvida: [[nome da pergunta]]` por `Decidido: [[nota do Assunto]]`. Se a origem for uma tarefa, removo a linha da pergunta do `Indice`, pois ela passa a ser referenciada pela decisão no escopo técnico.
-   3. Movo a nota da pergunta para `Vault/Escopo técnico/Perguntas e respostas/Histórico`.
-7. Toda dúvida nova, todo tópico sem decisão e toda proposta minha viram pergunta em `Vault/Escopo técnico/Perguntas e respostas`. Nunca ficam soltos no escopo.
-8. Pergunta cuja resposta não foi compreendida permanece em `Vault/Escopo técnico/Perguntas e respostas`; acrescento na mesma nota uma nova pergunta para esclarecer, seguida de `Resposta:`.
-9. Nenhum conteúdo é apagado (linhas de link podem ser trocadas ou removidas conforme estas regras). Se algo precisa sair do escopo, vai para a nota da pergunta correspondente; se não houver pergunta correspondente, crio a pergunta conforme o item 1 e coloco o conteúdo nela.
+## Regra 3: Quem manda é o usuário — quando o senhor ordenar, executo sem discutir; nunca decidir por conta própria; sempre olhar o que o senhor mandar olhar; nunca dizer que fiz sem ter feito.
 
-## Conferência obrigatória antes de encerrar cada processamento de perguntas e respostas (seguir sempre)
-Leio cada nota do escopo alterada e confirmo:
-- Não há pergunta, alternativa, lista de opções, comparação ou pesquisa.
-- Toda decisão que veio de pergunta tem o link `[[ ]]` da pergunta.
-- Todo tópico sem decisão aparece somente como a linha `Dúvida: [[nome da pergunta]]`, apontando para pergunta aberta em `Vault/Escopo técnico/Perguntas e respostas`.
-- Não há proposta minha registrada como decisão.
-- Se encontrar qualquer erro, informo ao usuário antes de encerrar.
+## Antes de entregar, confirme
+1. Código novo segue as 3 camadas e o sentido das chamadas; todo SQL é parametrizado.
+2. Nenhum código que funcionava foi alterado sem autorização.
+
+Na dúvida, pergunte. Nunca adivinhe.
+
+## Memory
+- Read/write memories ONLY in `memory/` (project root). Never use auto memory or ~/.claude.
+- Hubs (create if missing; contain ONLY `- [[Note]]: 1-line summary`, never content):
+  00-index.md: links to hubs below
+  01-context.md: goal, architecture, stack, modules
+  02-decisions.md: technical decisions + reason
+  03-conventions.md: code/naming/folder patterns
+  04-commands.md: build/test/lint/deploy commands
+  05-bugs.md: bug, root cause, fix
+  06-user-prefs.md: user corrections/preferences
+  07-questions.md: open questions
+  99-todo.md: open tasks
+- Each fact goes to the hub of its type (decision stated in a todo ⇒ 02 note + Related).
+- Notes: flat in `memory/<hub>/<Note>.md` (sub-hubs too). Filename = link title, unique across `memory/` (name taken ⇒ add type: `Auth bugs`).
+- Note = one module/entity (`Users`, `Payments`, `Login`); its features are entries. Before creating, find that module/entity's note in the hub and append there. Name covers the whole subject, never just current entries; rename (fixing links) if it doesn't. No note without facts.
+- Split: when a note's entries form sub-subjects searchable independently, move each to its own note (`Login 2FA`); parent keeps only [[links]] (sub-hub). Each note linked from exactly one hub.
+- Line `Related: [[A]], [[B]]` in both linked notes.
+- Entry: `### YYYY-MM-DD Title` + 1-3 terse bullets (what/why/where). Append. Update instead of duplicating.
+- Read path: 00-index → hub → only notes whose summary matches task → [[links]] only if relevant. Navigate only via [[links]]; never list/glob/read whole folders (grep only to fix links on rename/delete).
+- Write immediately when a hub's topic occurs. New note ⇒ link in its hub same step.
+- Todo done: move lasting facts to their hub, delete the entry; empty note ⇒ delete it and every link to it. Code overrides memory: fix stale notes. No secrets.
+- Question (07-questions, only when needed): an open question with more than one possible answer ⇒ its own note with alternatives, pros/cons, sources. Questions live only here, never in 99-todo; 99-todo is tasks only.
+- Answered: write the answer to the hub of its type (e.g. 02-decisions: technical decisions + reason) with Related: [[question]], then delete the question note (prune).
+- Before closing a question pass, verify: every answered question became a hub entry with Related and its 07-questions note deleted; no open question outside 07-questions; report any error before finishing.

@@ -1,6 +1,6 @@
 ---
 name: init
-description: Grava no CLAUDE.md do projeto, depois do conteúdo do primeiro título de nível 1 (antes do primeiro subtítulo de nível 2, ou no final se não houver), o conteúdo do arquivo ContenteClaudeMd do plugin, entre marcadores, preservando o resto do arquivo; cria a pasta Vault e o arquivo Vault/Indice.md se não existirem; e, com o StatusLineGenerate.sh, configura a variável CLAUDE_CODE_FORK_SUBAGENT=0 no ~/.claude/settings.json. Só pode ser chamada pelo usuário com /kfactory:init.
+description: Grava no CLAUDE.md do projeto, depois do conteúdo do primeiro título de nível 1 (antes do primeiro subtítulo de nível 2, ou no final se não houver), o conteúdo do arquivo ContenteClaudeMd do plugin, entre marcadores, preservando o resto do arquivo; cria a pasta memory e o arquivo memory/00-index.md se não existirem; e, com o StatusLineGenerate.sh, configura a variável CLAUDE_CODE_FORK_SUBAGENT=0 no ~/.claude/settings.json. Só pode ser chamada pelo usuário com /kfactory:init.
 disable-model-invocation: true
 ---
 
@@ -44,10 +44,10 @@ Siga os passos na ordem. Não pule nenhum. Não altere nada além do descrito.
 
 6. Se o NOVO texto for igual ao conteúdo atual do `CLAUDE.md`, informe que ele já está atualizado e não grave. Senão, grave o NOVO texto no `CLAUDE.md` da raiz do projeto com a ferramenta Write. Nunca use comando do Bash para alterar o `CLAUDE.md`.
 
-7. Pasta `Vault` e arquivo `Vault/Indice.md`, na raiz do projeto:
-   - Tente ler com a ferramenta Read o arquivo `Vault/Indice.md` da raiz do projeto.
+7. Pasta `memory` e arquivo `memory/00-index.md`, na raiz do projeto:
+   - Tente ler com a ferramenta Read o arquivo `memory/00-index.md` da raiz do projeto.
    - Se ele existir: não altere nada.
-   - Se ele não existir: crie-o vazio com a ferramenta Write. A ferramenta Write cria também a pasta `Vault` se ela não existir. Não altere nem apague nada que já exista dentro de `Vault`.
+   - Se ele não existir: crie-o vazio com a ferramenta Write. A ferramenta Write cria também a pasta `memory` se ela não existir. Não altere nem apague nada que já exista dentro de `memory`.
 
 8. Execute com a ferramenta Bash exatamente este comando, sem acrescentar nada:
 
@@ -68,4 +68,4 @@ Siga os passos na ordem. Não pule nenhum. Não altere nada além do descrito.
    - O arquivo é exatamente igual ao NOVO texto.
    Se algum item falhar, informe ao usuário qual falhou e o que foi encontrado. Não tente corrigir.
 
-10. Informe ao usuário, em poucas linhas: se o `CLAUDE.md` foi criado, atualizado ou já estava atualizado; se a pasta `Vault` e o arquivo `Vault/Indice.md` foram criados ou já existiam; o resultado da verificação final; o resultado do script da variável `CLAUDE_CODE_FORK_SUBAGENT`; e que a mudança no `~/.claude/settings.json` só vale depois de fechar e abrir o Claude Code.
+10. Informe ao usuário, em poucas linhas: se o `CLAUDE.md` foi criado, atualizado ou já estava atualizado; se a pasta `memory` e o arquivo `memory/00-index.md` foram criados ou já existiam; o resultado da verificação final; o resultado do script da variável `CLAUDE_CODE_FORK_SUBAGENT`; e que a mudança no `~/.claude/settings.json` só vale depois de fechar e abrir o Claude Code.

@@ -38,10 +38,12 @@ test('pedido de revisão marca a sessão e instrui chamar a skill', () => {
   assert.equal(fs.existsSync(arquivoDaMarca(S)), true);
 });
 
-test('mensagem sem revisão não marca e não imprime nada', () => {
+test('mensagem sem revisão injeta o lembrete, não marca nem instrui revisão', () => {
   const r = pedido('crie o arquivo ola.html');
   assert.equal(r.status, 0);
-  assert.equal(r.stdout, '');
+  assert.equal(r.json.hookSpecificOutput.hookEventName, 'UserPromptSubmit');
+  assert.match(r.json.hookSpecificOutput.additionalContext, /CLAUDE\.md/);
+  assert.doesNotMatch(r.json.hookSpecificOutput.additionalContext, /kfactory:reviser/);
   assert.equal(fs.existsSync(arquivoDaMarca(S)), false);
 });
 
