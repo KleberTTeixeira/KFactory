@@ -25,6 +25,13 @@ Trecho que parece de duas camadas está misturado: divida. Se pedirem para quebr
 
 Na dúvida, pergunte. Nunca adivinhe.
 
+## Session checklist (every request)
+- Plan only what was asked, 1 verifiable action per item, in temp note `memory/99-todo/Checklist - <subject>.md` (linked in 99-todo same step). Items: `- [ ]`.
+- Show plan, then STOP. Never start until user explicitly says start. Plan changed ⇒ update note, show again.
+- Done item ⇒ `- [x]` same step. Never check undone work.
+- End: recheck every item from the top against code/files. Pending, "maybe", excuse or partial ⇒ uncheck, finish it, recheck all again. Exit only when all done.
+- Then: lasting facts to their hubs, delete note + its link, tell user.
+
 ## Memory
 - Read/write memories ONLY in `memory/` (project root). Never use auto memory or ~/.claude.
 - Hubs (create if missing; contain ONLY `- [[Note]]: 1-line summary`, never content):
