@@ -479,6 +479,12 @@ function segmentosDoComando(texto, profundidade = 0) {
       }
     } else if (ef.nome === 'eval') {
       todos.push(...segmentosDoComando(ef.args.join(' '), profundidade + 1));
+    } else if (ef.nome === 'alias') {
+      // O valor do alias é um comando que roda depois; é analisado como os demais.
+      for (const a of ef.args) {
+        const igual = a.indexOf('=');
+        if (igual > 0) todos.push(...segmentosDoComando(a.slice(igual + 1), profundidade + 1));
+      }
     } else if (ef.nome === 'find') {
       for (let k = 0; k < ef.args.length; k++) {
         if (['-exec', '-execdir', '-ok', '-okdir'].includes(ef.args[k])) {

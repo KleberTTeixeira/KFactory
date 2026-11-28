@@ -182,6 +182,53 @@ function aceitaDinamico(ef, palavra) {
   return false;
 }
 
+// Palavras do segmento que atribuem valor a variáveis: as que vêm antes do comando
+// (NOME=valor cmd, env NOME=valor cmd) e os argumentos de export/declare/local/readonly/typeset.
+const DECLARADORES = new Set(['export', 'declare', 'local', 'readonly', 'typeset']);
+
+function palavrasDeAtribuicao(seg, ef) {
+  if (!ef || !ef.nome) return seg.palavras.slice();
+  const k = seg.palavras.length - ef.args.length - 1;
+  const saida = seg.palavras.slice(0, k);
+  if (DECLARADORES.has(ef.nome)) saida.push(...ef.args);
+  return saida;
+}
+
+// Cada parte de um novo PATH precisa ficar dentro do projeto; só "$PATH" (o valor atual) é aceito como está.
+function verificarPath(seg, ef, ctx, conhecidas) {
+  for (const w of palavrasDeAtribuicao(seg, ef)) {
+    const m = /^PATH\+?=(.*)$/s.exec(w);
+    if (!m) continue;
+    for (const parte of m[1].split(':')) {
+      if (parte === '' || /^\$(?:PATH|\{PATH\})$/.test(parte)) continue;
+      const achado = verificarPalavra(parte, ctx, conhecidas);
+      if (achado && achado.dinamico) return negar(`a variável PATH recebe "${achado.v}", valor só conhecido na execução.`);
+      if (achado) return negar(`a variável PATH recebe "${parte}", fora do projeto (${achado.alvo}).`);
+    }
+  }
+  return null;
+}
+
+// Exceção do MAESTRI_CLI: a palavra do comando "$MAESTRI_CLI" (ou "${MAESTRI_CLI}") é liberada quando a
+// variável, no ambiente do hook, aponta para um arquivo executável chamado "maestri" (com links resolvidos).
+// Não vale se o próprio comando atribui valor à variável. Os demais argumentos seguem a regra normal.
+const REFERENCIA_MAESTRI = /^\$(?:MAESTRI_CLI|\{MAESTRI_CLI\})$/;
+
+function maestriLiberado(palavra, ef, conhecidas) {
+  if (!ef || palavra !== ef.palavra || !REFERENCIA_MAESTRI.test(palavra)) return false;
+  if (conhecidas.has('MAESTRI_CLI')) return false;
+  const valor = process.env.MAESTRI_CLI;
+  if (!valor || !path.isAbsolute(valor) || path.basename(valor) !== 'maestri') return false;
+  try {
+    const real = fs.realpathSync(valor);
+    if (path.basename(real) !== 'maestri' || !fs.statSync(real).isFile()) return false;
+    fs.accessSync(real, fs.constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // Com o plugin instalado, seus arquivos ficam fora do projeto. O destino real (com links resolvidos)
 // precisa ser o próprio arquivo do plugin.
 function raizesDoPlugin() {
@@ -265,6 +312,8 @@ function avaliar(entrada, ctx) {
   for (const seg of ctx.segmentos()) {
     if (seg.palavras.some((w) => /^IFS\+?=/.test(w))) return negar('alterar a variável IFS não é permitido.');
     const ef = comandoEfetivo(seg.palavras);
+    const negadoPath = verificarPath(seg, ef, ctx, conhecidas);
+    if (negadoPath) return negadoPath;
     if (ef && ef.nome === 'cd') {
       const destinos = ef.args.filter((a) => !a.startsWith('-'));
       if (destinos.length === 0) return negar('"cd" sem argumento leva à pasta pessoal, fora do projeto.');
@@ -287,6 +336,7 @@ function avaliar(entrada, ctx) {
     }
     const palavras = ef ? [ef.palavra, ...argumentosDeArquivo(ef)].filter(Boolean) : [];
     for (const p of palavras) {
+      if (maestriLiberado(p, ef, conhecidas)) continue;
       const achado = verificarPalavra(p, ctx, conhecidas);
       if (!achado) continue;
       if (achado.dinamico) {
