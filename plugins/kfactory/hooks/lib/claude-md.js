@@ -21,11 +21,6 @@ function contemFrase(texto) {
   return normalizar(texto).includes(FRASE);
 }
 
-// Mensagem do usuário que chama o comando /kfactory:init (que grava o bloco do kfactory no CLAUDE.md).
-function pedeInit(texto) {
-  return /^\s*\/kfactory:init(\s|$)/i.test(String(texto));
-}
-
 function ehClaudeMd(nome) {
   return String(nome).toLowerCase() === 'claude.md';
 }
@@ -191,7 +186,6 @@ function verificar(projeto, sessao) {
 module.exports = {
   FRASE,
   contemFrase,
-  pedeInit,
   ehClaudeMd,
   registrarConsentimento,
   retirarConsentimento,

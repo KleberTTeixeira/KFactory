@@ -30,8 +30,7 @@ function consentimento(sessao, prompt) {
   if (!projeto) return;
   try {
     claudeMd.atualizarCopia(projeto);
-    // Chamar /kfactory:init é pedir expressamente a alteração do CLAUDE.md.
-    if (claudeMd.contemFrase(prompt) || claudeMd.pedeInit(prompt)) claudeMd.registrarConsentimento(projeto, sessao);
+    if (claudeMd.contemFrase(prompt)) claudeMd.registrarConsentimento(projeto, sessao);
     else claudeMd.retirarConsentimento(projeto, sessao);
   } catch {
     // Sem consentimento registrado, a alteração continua bloqueada.

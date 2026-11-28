@@ -3,7 +3,6 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { temConsentimento } = require('../lib/claude-md');
 const { temPedido } = require('../lib/statusline');
 const {
   resolverCaminho,
@@ -183,13 +182,8 @@ function aceitaDinamico(ef, palavra) {
   return false;
 }
 
-// Exceção do comando /kfactory:init. Com o plugin instalado, seus arquivos ficam fora do projeto.
-// Só enquanto a mensagem atual do usuário tem o consentimento para alterar CLAUDE.md, libera
-// apenas: ler o arquivo modelos/ContenteClaudeMd do plugin e rodar "bash <plugin>/scripts/StatusLineGenerate.sh"
-// sem nada além disso no comando. O destino real (com links resolvidos) precisa ser o próprio arquivo do plugin.
-const MODELO_INIT = ['modelos', 'ContenteClaudeMd'];
-const SCRIPT_INIT = ['scripts', 'StatusLineGenerate.sh'];
-
+// Com o plugin instalado, seus arquivos ficam fora do projeto. O destino real (com links resolvidos)
+// precisa ser o próprio arquivo do plugin.
 function raizesDoPlugin() {
   const raizes = [path.resolve(__dirname, '..', '..')];
   const env = process.env.CLAUDE_PLUGIN_ROOT;
@@ -220,17 +214,6 @@ function arquivoDoPlugin(valor, partes) {
   return raizesDoPlugin().some((r) => real === path.join(r, ...partes));
 }
 
-function excecaoInit(entrada, ctx) {
-  if (entrada.tool_name !== 'Read' && entrada.tool_name !== 'Bash') return false;
-  if (!temConsentimento(ctx.projeto, entrada.session_id)) return false;
-  if (entrada.tool_name === 'Read') return arquivoDoPlugin(entrada.tool_input.file_path, MODELO_INIT);
-  const segmentos = ctx.segmentos();
-  if (segmentos.length !== 1) return false;
-  const seg = segmentos[0];
-  if (seg.redirecionamentos.length || seg.heredocs.length || seg.palavras.length !== 2) return false;
-  return seg.palavras[0] === 'bash' && arquivoDoPlugin(seg.palavras[1], SCRIPT_INIT);
-}
-
 // Exceção do comando /kfactory:statusline. Só enquanto a mensagem atual do usuário é o comando,
 // libera apenas rodar "bash <plugin>/scripts/StatusLineToggle.sh" sem nada além disso no comando.
 const SCRIPT_STATUSLINE = ['scripts', 'StatusLineToggle.sh'];
@@ -246,7 +229,6 @@ function excecaoStatusline(entrada, ctx) {
 }
 
 function avaliar(entrada, ctx) {
-  if (excecaoInit(entrada, ctx)) return null;
   if (excecaoStatusline(entrada, ctx)) return null;
 
   // Ferramentas MCP que gravam em disco escolhendo o destino internamente
